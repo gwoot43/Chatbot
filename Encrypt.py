@@ -43,6 +43,9 @@ def SymmetricEncryption ():
     else:
         decrypted_msg = Fernet(byte_key).decrypt(encrypted_msg)
         print ('Decryption successful. The original message is:', decrypted_msg.decode())
+        time.sleep(2)
+        Menu()
+
       
 def SymmEncryptor ():
     #Just the encryption process so people can send messages to each other usuing the decryptor 
@@ -56,7 +59,7 @@ def SymmEncryptor ():
     encrypted_msg = cipher.encrypt(message)
     print('Send this ciphertext [',encrypted_msg.decode(),'] along with your secret key to a friend so that they can decrypt your message using the decryptor!')
     time.sleep(1)
-
+    Menu()
 
 def SymmDecryptor ():
     #Just the decryption process so people can send messages to each other using the encryptor
@@ -65,13 +68,45 @@ def SymmDecryptor ():
     print('Saving...')
     encrypted_msg = bytes(ciphertext, 'utf-8')
     time.sleep(1)
-    secret_key = input ('Input the shared secret key to decrypt the file: ')
-    byte_key = bytes(secret_key, 'utf-8')
-    time.sleep(1)
-    print('Decrypting...')
-    decrypted_msg = Fernet(byte_key).decrypt(encrypted_msg)
-    print('Here is the decrypted message: ', decrypted_msg.decode())
+    while True:
+        secret_key = input ('Input the shared secret key to decrypt the file: ')
+        byte_key = bytes(secret_key, 'utf-8')
+        if secret_key == 'done':
+            break
+        try:
+            time.sleep(1)
+            print('Decrypting...')
+            decrypted_msg = Fernet(byte_key).decrypt(encrypted_msg)
+            print('Here is the decrypted message: ', decrypted_msg.decode())
+            time.sleep(2)
+            Menu()
+        except ValueError:
+            print("Invalid secret key. Type 'done' to exit")
+            continue
+
+#def Hashing ():
+    
+
+def Menu ():
+    choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Explore the chatbot! \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 4. Hashing Practical Example \n 5. Exit \n")
+    if choice == '1' :
+        print('chatbot')
+    elif choice == '2' :
+        SymmetricEncryption ()
+    elif choice == '2a' :
+        SymmEncryptor ()
+    elif choice == '2b' :
+        SymmDecryptor () 
+    elif choice == '3' :
+        print('AsymmetricEncryption')
+    elif choice == '4' :
+        print('Hashing')
+    elif choice == '5' :
+        exit ()
+    else:
+        print('Invalid input. Please input a number between 1-5')
+        Menu ()
 
 
 #run
-SymmDecryptor ()
+SymmDecryptor()
