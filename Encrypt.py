@@ -1,8 +1,10 @@
 import time
 from cryptography.fernet import Fernet
+from PIL import Image
+import hashlib
+import os
 key = Fernet.generate_key()
 cipher = Fernet(key)
-
 
 #Symmetric Encryption
 def SymmetricEncryption (): 
@@ -84,11 +86,46 @@ def SymmDecryptor ():
             print("Invalid secret key. Type 'done' to exit")
             continue
 
-#def Hashing ():
-    
+#def AsymmetricEncryption ():
+
+def Hashing ():
+    hashmsg = input ("Insert a message you'd like to hash: ")
+    print('Hashing...')
+    time.sleep(1)
+    hashbyte = bytes(hashmsg,'utf-8')
+    hashvalue = hashlib.sha256(hashbyte)
+    print('The hash value of your original message:', hashvalue.hexdigest())
+    Menu()
+
+#Images
+def ImgSymm ():
+    image = Image.open('SymmEncryption.jpg')
+    image.show()
+
+def ImgAsymm ():
+    image = Image.open('AsymmEncryption.jpg')
+    image.show()
+
+def ImgHashing ():
+    image = Image.open('Hashing.jpg')
+    image.show()
+
+def Diagrams ():
+    choice = input ('Please select the diagrams you wish to view: \n 1. Symmetric Encryption \n 2. Asymmetric Encryption \n 3. Hashing \n 4. Menu \n')
+    if choice == '1' :
+        ImgSymm ()
+        Diagrams () 
+    elif choice == '2' :
+        ImgAsymm ()
+        Diagrams ()     
+    elif choice == '3' :
+        ImgHashing ()
+        Diagrams()
+    elif choice == '4' :
+        Menu ()
 
 def Menu ():
-    choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Explore the chatbot! \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 4. Hashing Practical Example \n 5. Exit \n")
+    choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Explore the chatbot! \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 4. Hashing Practical Example \n 5. Diagrams of Cryptographic Primitives \n 6. Exit \n")
     if choice == '1' :
         print('chatbot')
     elif choice == '2' :
@@ -100,13 +137,14 @@ def Menu ():
     elif choice == '3' :
         print('AsymmetricEncryption')
     elif choice == '4' :
-        print('Hashing')
+        Hashing ()
     elif choice == '5' :
+        Diagrams ()
+    elif choice == '6' :
         exit ()
     else:
         print('Invalid input. Please input a number between 1-5')
         Menu ()
 
-
 #run
-SymmDecryptor()
+Menu()
