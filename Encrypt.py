@@ -3,6 +3,10 @@ from cryptography.fernet import Fernet
 from PIL import Image
 import hashlib
 import os
+import random
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+
 key = Fernet.generate_key()
 cipher = Fernet(key)
 
@@ -80,21 +84,48 @@ def SymmDecryptor ():
             print('Decrypting...')
             decrypted_msg = Fernet(byte_key).decrypt(encrypted_msg)
             print('Here is the decrypted message: ', decrypted_msg.decode())
-            time.sleep(2)
+            time.sleep(1)
             Menu()
         except ValueError:
             print("Invalid secret key. Type 'done' to exit")
             continue
 
-#def AsymmetricEncryption ():
+def AsymmetricEncryption (): 
+    messages = []
+    fhand = open ('MessageList.txt', encoding='utf')
+    for line in fhand:
+        #split by new line 
+        #getting rid of empty space
+        new_msg = line.strip()
+        messages.append(new_msg)
+    new_message = random.choice(messages)
+    print (new_message)
+    print ('A message will be encrypted with your public key. Decrypt it by using your private key')
 
 def Hashing ():
-    hashmsg = input ("Insert a message you'd like to hash: ")
+    print ("A good example for hashing is in password storage. Let's say that Netflix has a stored hash value of your password")
+    hashmsg = input ("Insert a password: ")
     print('Hashing...')
     time.sleep(1)
     hashbyte = bytes(hashmsg,'utf-8')
     hashvalue = hashlib.sha256(hashbyte)
-    print('The hash value of your original message:', hashvalue.hexdigest())
+    print("In Netflix's password database, their hash value of your password would be::", hashvalue.hexdigest())
+    time.sleep(1)
+    print ("In order to gain access, the hash value of your password input must match the stored hash value in Netflix's database")
+    hashpwd = input ("Insert a password, or a different password to see a different hash value: ")
+    if hashpwd == hashmsg:
+        bytepass = bytes(hashpwd, 'utf-8')
+        hashvaluepass = hashlib.sha256(bytepass)
+        print ('Hashing...')
+        time.sleep(1)
+        print ("Access granted, hash value is: ", hashvaluepass.hexdigest())
+    else:
+        incorrectbytepass = bytes(hashpwd, 'utf-8')
+        hashvalueincorrectpass = hashlib.sha256(incorrectbytepass)
+        print('Hashing...')
+        time.sleep(1)
+        print ("Access denied, hash value is: ", hashvalueincorrectpass.hexdigest())
+    time.sleep(1)
     Menu()
 
 #Images
@@ -125,7 +156,7 @@ def Diagrams ():
         Menu ()
 
 def Menu ():
-    choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Explore the chatbot! \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 4. Hashing Practical Example \n 5. Diagrams of Cryptographic Primitives \n 6. Exit \n")
+    choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Explore the chatbot! \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 4. Hashing Practical Example \n 5. Diagrams of Cryptographic Primitives \n 6. Personal Encryption \n 7. Exit \n")
     if choice == '1' :
         print('chatbot')
     elif choice == '2' :
@@ -135,12 +166,14 @@ def Menu ():
     elif choice == '2b' :
         SymmDecryptor () 
     elif choice == '3' :
-        print('AsymmetricEncryption')
+        AsymmetricEncryption ()
     elif choice == '4' :
         Hashing ()
     elif choice == '5' :
         Diagrams ()
     elif choice == '6' :
+        print ('undefined function')
+    elif choice == '7' :
         exit ()
     else:
         print('Invalid input. Please input a number between 1-5')
