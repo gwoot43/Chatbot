@@ -4,8 +4,12 @@ from PIL import Image
 import hashlib
 import os
 import random
+import cryptography
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
 
 key = Fernet.generate_key()
 cipher = Fernet(key)
@@ -99,8 +103,50 @@ def AsymmetricEncryption ():
         new_msg = line.strip()
         messages.append(new_msg)
     new_message = random.choice(messages)
-    print (new_message)
+    new_message_bytes = bytes(new_message,'utf-8')
     print ('A message will be encrypted with your public key. Decrypt it by using your private key')
+    #Key Generation: 128 bit key or 2048 byte key,  use 65537 for legacy purposes
+    private_key = rsa.generate_private_key(
+        public_exponent = 65537,
+        key_size = 2048,
+        backend=default_backend())
+    public_key = private_key.public_key()
+
+    #Key Storage: In order to store a key, they need to be serialised and written into a file
+    #Private Enhanced Email (PEM) is the file format for storing and sending crytographic keys, certificates
+    serial_private = private_key.private_bytes(
+        encoding = serialization.Encoding.PEM, 
+        format=serialization.PrivateFormat.PKCS8, 
+        encryption_algorithm=serialization.NoEncryption())
+    serial_public = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM, 
+        format=serialization.PublicFormat.SubjectPublicKeyInfo)
+    print ('Generating our public and private keys...')
+    time.sleep(1)
+    print('This will be your private key:\n',serial_private.decode())
+    time.sleep(1)
+    print('This will be your public key:\n',serial_public.decode())
+
+    #encryption
+    ciphertext = public_key.encrypt(
+        new_message_bytes,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None))
+    time.sleep(1)
+    print('Given our ciphertext, we now use our private key to decrypt this message which has been encrypted with our public key:\n\n',ciphertext)
+    time.sleep(1)
+
+    #decryption
+    original_message = private_key.decrypt(
+        ciphertext,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None))
+    print('\nThe original message is:',original_message.decode())
+
 
 def Hashing ():
     print ("A good example for hashing is in password storage. Let's say that Netflix has a stored hash value of your password")
@@ -180,4 +226,4 @@ def Menu ():
         Menu ()
 
 #run
-Menu()
+AsymmetricEncryption()
