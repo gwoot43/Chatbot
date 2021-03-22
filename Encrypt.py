@@ -124,6 +124,9 @@ def AsymmetricEncryption ():
     print ('Generating our public and private keys...')
     time.sleep(1)
     print('This will be your private key:\n',serial_private.decode())
+    print('Saving....')
+    time.sleep(1)
+    print ("Our private key will be saved under the name 'Private_key', type this to recall our key")
     time.sleep(1)
     print('This will be your public key:\n',serial_public.decode())
 
@@ -139,13 +142,221 @@ def AsymmetricEncryption ():
     time.sleep(1)
 
     #decryption
-    original_message = private_key.decrypt(
-        ciphertext,
-        padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA256()),
-            algorithm=hashes.SHA256(),
-            label=None))
-    print('\nThe original message is:',original_message.decode())
+    UI_private_key = input ('Insert your private key to decrypt the message: ')
+    print('Decrypting...')
+    time.sleep(1)
+    if UI_private_key == 'Private_key':
+        original_message = private_key.decrypt(
+            ciphertext,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None))
+        print('\nThe original message is:',original_message.decode(),'\n\nNow generate your own keys and send your public key to your friends so that you can decrypt their encrypted message with your private key!\n')
+    else:
+        print('Invalid private key, unable to decrypt')
+    Menu()
+
+def asymm_key_generation () :
+    private_key1 = rsa.generate_private_key(
+        public_exponent = 65537,
+        key_size = 2048,
+        backend=default_backend())
+    public_key1 = private_key1.public_key()
+
+    private_key2 = rsa.generate_private_key(
+        public_exponent = 65537,
+        key_size = 2048,
+        backend=default_backend())
+    public_key2 = private_key2.public_key()
+
+    private_key3 = rsa.generate_private_key(
+        public_exponent = 65537,
+        key_size = 2048,
+        backend=default_backend())
+    public_key3 = private_key3.public_key()
+
+    serial_private_rob = private_key1.private_bytes(
+        encoding = serialization.Encoding.PEM, 
+        format=serialization.PrivateFormat.PKCS8, 
+        encryption_algorithm=serialization.NoEncryption())
+    with open('serial_private_rob.pem','wb') as f:
+        f.write(serial_private_rob)
+    serial_private_megan = private_key2.private_bytes(
+        encoding = serialization.Encoding.PEM, 
+        format=serialization.PrivateFormat.PKCS8, 
+        encryption_algorithm=serialization.NoEncryption())
+    with open('serial_private_megan.pem','wb') as f:
+        f.write(serial_private_megan)
+    serial_private_alex = private_key3.private_bytes(
+        encoding = serialization.Encoding.PEM, 
+        format=serialization.PrivateFormat.PKCS8, 
+        encryption_algorithm=serialization.NoEncryption())
+    with open('serial_private_alex.pem','wb') as f:
+        f.write(serial_private_alex)
+    #storing keys for Rob, Megan, Alex
+    rob_public_key = public_key1.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo)
+    with open('rob_public_key.pem','wb') as f:
+        f.write(rob_public_key)
+
+    megan_public_key = public_key2.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo)
+    with open('megan_public_key.pem','wb') as f:
+        f.write(megan_public_key)
+    
+    alex_public_key = public_key3.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo)
+    with open('alex_public_key.pem','wb') as f:
+        f.write(alex_public_key) 
+    print('You should only run this once unless you want to reset the keys')
+    time.sleep(1)
+    print('Generating...')
+    time.sleep(2)
+    print('Public and Private Keys for Rob, Megan and Alex have been generated. Save the private and public key files in a seperate folder!')
+
+def asymm_encryption () :
+    person = input(str("Who would you like to send a message to?: Rob, Megan or Alex? "))
+    if person == 'Rob' or person == 'rob':
+        publickey = 'rob_public_key.pem'
+        with open (publickey,'rb') as key_file:
+            public_key = serialization.load_pem_public_key(
+                key_file.read(),
+                backend=default_backend())
+            #message encryption
+            message = input('Insert your message: ')
+            byte_message = bytes(message,'utf-8')
+            ciphertext_rob = public_key.encrypt(
+                byte_message,
+                padding.OAEP(
+                    mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                    algorithm=hashes.SHA256(),
+                    label=None))
+            print ('Your encrypted message to Rob:\n',ciphertext_rob)
+            time.sleep(1)
+            print ("The encrypted text will be saved as 'ciphertext_rob.txt'")
+            with open ('ciphertext_rob.txt','wb') as f:
+                f.write(ciphertext_rob)
+            time.sleep(2)
+            Menu()
+
+    elif person == 'Megan' or person == 'megan':
+        publickey = 'megan_public_key.pem'
+        with open (publickey,'rb') as key_file:
+            public_key = serialization.load_pem_public_key(
+                key_file.read(),
+                backend=default_backend())
+            #message encryption
+            message = input('Insert your message: ')
+            byte_message = bytes(message,'utf-8')
+            ciphertext_megan = public_key.encrypt(
+                byte_message,
+                padding.OAEP(
+                    mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                    algorithm=hashes.SHA256(),
+                    label=None))
+            print ('Your encrypted message to Megan:\n',ciphertext_megan)
+            time.sleep(1)
+            print ("The encrypted text will be saved as 'ciphertext_megan.txt'")
+            with open ('ciphertext_megan.txt','wb') as f:
+                f.write(ciphertext_megan)
+            time.sleep(2)
+            Menu()
+
+    elif person == 'Alex' or person == 'alex':
+        publickey = 'alex_public_key.pem'
+        with open (publickey,'rb') as key_file:
+            public_key = serialization.load_pem_public_key(
+                key_file.read(),
+                backend=default_backend())
+            #message encryption
+            message = input('Insert your message: ')
+            byte_message = bytes(message,'utf-8')
+            ciphertext_alex = public_key.encrypt(
+                byte_message,
+                padding.OAEP(
+                    mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                    algorithm=hashes.SHA256(),
+                    label=None))
+            print ('Your encrypted message to Alex:\n',ciphertext_alex)
+            time.sleep(1)
+            print ("The encrypted text will be saved as 'ciphertext_alex.txt'")
+            with open ('ciphertext_alex.txt','wb') as f:
+                f.write(ciphertext_alex)
+            time.sleep(2)
+            Menu()
+
+    else:
+        print('Invalid input, must type in either Rob, Megan or Alex!')
+        Menu()
+
+def asymm_decryption ():
+    print('Before decrypting, make sure you put the encrypted file under the appropriate names. e.g. ciphertext_alex.txt for example')
+    time.sleep(1)
+    person = input ('Whose public key did you use to encrypt the message? Rob, Megan or Alex?: ')
+    if person == 'Rob' or person == 'rob':
+        privatekey = 'serial_private_rob.pem'
+        with open (privatekey, 'rb') as key_file:
+            private_key = serialization.load_pem_private_key(
+                key_file.read(),
+                password=None,
+                backend=default_backend())
+        with open ('ciphertext_rob.txt','rb') as key_file:
+            encrypted_message = key_file.read()
+        original_message = private_key.decrypt(
+            encrypted_message,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None))
+        print('Decrypting...')
+        time.sleep(2)
+        print('The encrypted message is:',original_message.decode())
+    
+    elif person == 'Megan' or person == 'megan' :
+        privatekey = 'serial_private_megan.pem'
+        with open(privatekey, 'rb') as key_file:
+            private_key = serialization.load_pem_private_key(
+                key_file.read(),
+                password=None,
+                backend=default_backend())
+        with open('ciphertext_megan.txt','rb') as key_file:
+            encrypted_message = key_file.read()
+        original_message = private_key.decrypt(
+            encrypted_message,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None))
+        print('Decrypting...')
+        time.sleep(2)
+        print('The encrypted message is:',original_message.decode())
+
+    elif person == 'Alex' or person == 'alex':
+        privatekey = 'serial_private_alex.pem'
+        with open(privatekey, 'rb') as key_file:
+            private_key = serialization.load_pem_private_key(
+                key_file.read(),
+                password=None,
+                backend=default_backend())
+        with open('ciphertext_alex.txt','rb') as key_file:
+            encrypted_message = key_file.read()
+        original_message = private_key.decrypt(
+            encrypted_message,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None))
+        print('Decrypting...')
+        time.sleep(2)
+        print('The encrypted message is:',original_message.decode()) 
+
+    else:
+        print('Invalid input, must type in either Rob, Megan or Alex!')
+        Menu()
 
 
 def Hashing ():
@@ -202,7 +413,7 @@ def Diagrams ():
         Menu ()
 
 def Menu ():
-    choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Explore the chatbot! \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 4. Hashing Practical Example \n 5. Diagrams of Cryptographic Primitives \n 6. Personal Encryption \n 7. Exit \n")
+    choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Explore the chatbot! \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 	3a. Key Generator\n 	3b. Encryptor \n 	3c. Decryptor \n 4. Hashing Practical Example \n 5. Diagrams of Cryptographic Primitives \n 6. Personal Encryption \n 7. Exit \n")
     if choice == '1' :
         print('chatbot')
     elif choice == '2' :
@@ -213,6 +424,12 @@ def Menu ():
         SymmDecryptor () 
     elif choice == '3' :
         AsymmetricEncryption ()
+    elif choice == '3a' :
+        asymm_key_generation ()
+    elif choice == '3b' :
+        asymm_encryption ()
+    elif choice == '3c' :
+        asymm_decryption ()     
     elif choice == '4' :
         Hashing ()
     elif choice == '5' :
@@ -226,4 +443,4 @@ def Menu ():
         Menu ()
 
 #run
-AsymmetricEncryption()
+Menu()
