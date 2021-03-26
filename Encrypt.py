@@ -398,19 +398,44 @@ def ImgHashing ():
     image = Image.open('Hashing.jpg')
     image.show()
 
+def ImgAES ():
+    image = Image.open('AESJumblingProcess.jpg')
+    image.show()
+#when reuploading different image under same name in github, won't show the different img?
+def ImgHMAC ():
+    image = Image.open('HMAC.jpg')
+    image.show()
+
+def ImgSessionKeys ():
+    image = Image.open('SessionKeys.jpg')
+    image.show()
+
 def Diagrams ():
-    choice = input ('Please select the diagrams you wish to view: \n 1. Symmetric Encryption \n 2. Asymmetric Encryption \n 3. Hashing \n 4. Menu \n')
+    choice = input ('Please select the diagrams you wish to view: \n 1. Symmetric Encryption \n 2. AES Jumbling Process + New Key Generation \n 3. Asymmetric Encryption \n 4. Hashing \n 5. Hash-based Message Authentication Code (HMAC) \n 6. Session Keys \n 7. Menu \n')
     if choice == '1' :
         ImgSymm ()
         Diagrams () 
+    elif choice == '4' :
+        ImgAES ()
+        Diagrams ()
     elif choice == '2' :
         ImgAsymm ()
         Diagrams ()     
     elif choice == '3' :
         ImgHashing ()
         Diagrams()
-    elif choice == '4' :
+    elif choice == '5' :
+        ImgHMAC()
+        Diagrams ()
+    elif choice == '6' :
+        ImgSessionKeys ()
+        Diagrams ()
+    elif choice == '7' :
         Menu ()
+    else: 
+        print('Invalid input. Please input a number between 1-7')
+        Diagrams ()
+
 
 def Menu ():
     choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Explore the chatbot! \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 	3a. Key Generator\n 	3b. Encryptor \n 	3c. Decryptor \n 4. Hashing Practical Example \n 5. Diagrams of Cryptographic Primitives \n 6. Personal Encryption \n 7. Exit \n")
@@ -439,7 +464,7 @@ def Menu ():
     elif choice == '7' :
         exit ()
     else:
-        print('Invalid input. Please input a number between 1-5')
+        print('Invalid input. Please input a number between 1-7')
         Menu ()
 
 #run
