@@ -6,5 +6,5 @@ The other part of this is a chatbot which would convey this information to you j
 If you wanted to know about the strengths of symmetric encryption, typing 'pros and cons symmetric encryption' or 'why are the benefits of symmetric encryption' should ideally yield the same results. 
 
 Tutorials followed for chatbot 
-https://www.youtube.com/watch?v=wypVcNIH6D4&t=870s 
+https://www.youtube.com/watch?v=wypVcNIH6D4&t=870s, 
 https://www.youtube.com/watch?v=HZIDUbtCnBc (updated)
