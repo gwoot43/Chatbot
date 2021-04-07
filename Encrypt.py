@@ -445,7 +445,7 @@ def Diagrams ():
         Diagrams ()
 
 def CryptoReport () :
-    webbrowser.open("https://www.openlearning.com/u/andreaskyungoukahn-qmdwe0/blog/CryptographicPrimitivesReport/")
+    #link won't work due to closed network, open the attached word doc instead
 
 def Menu ():
     choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Summary and explanation of cryptographic primitives \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 	3a. Key Generator\n 	3b. Encryptor \n 	3c. Decryptor \n 4. Hashing Practical Example \n 5. Diagrams of Cryptographic Primitives \n 6. Personal Encryption \n 7. Exit \n")
