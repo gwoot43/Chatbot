@@ -1,4 +1,5 @@
 import time
+import webbrowser
 from cryptography.fernet import Fernet
 from PIL import Image
 import hashlib
@@ -410,8 +411,12 @@ def ImgSessionKeys ():
     image = Image.open('SessionKeys.jpg')
     image.show()
 
+def ImgSSLKeys ():
+    image = Image.open('SSLSessionKeys.jpg')
+    image.show()
+
 def Diagrams ():
-    choice = input ('Please select the diagrams you wish to view: \n 1. Symmetric Encryption \n 2. AES Jumbling Process + New Key Generation \n 3. Asymmetric Encryption \n 4. Hashing \n 5. Hash-based Message Authentication Code (HMAC) \n 6. Session Keys \n 7. Menu \n')
+    choice = input ('Please select the diagrams you wish to view: \n 1. Symmetric Encryption \n 2. AES Jumbling Process + New Key Generation \n 3. Asymmetric Encryption \n 4. Hashing \n 5. Hash-based Message Authentication Code (HMAC) \n 6. Session Keys \n 7. SSL Session Keys \n 8. Menu \n')
     if choice == '1' :
         ImgSymm ()
         Diagrams () 
@@ -431,16 +436,21 @@ def Diagrams ():
         ImgSessionKeys ()
         Diagrams ()
     elif choice == '7' :
+        ImgSSLKeys ()
+        Diagrams ()
+    elif choice == '8' :
         Menu ()
     else: 
-        print('Invalid input. Please input a number between 1-7')
+        print('Invalid input. Please input a number between 1-8')
         Diagrams ()
 
+def CryptoReport () :
+    webbrowser.open("https://www.openlearning.com/u/andreaskyungoukahn-qmdwe0/blog/CryptographicPrimitivesReport/")
 
 def Menu ():
-    choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Explore the chatbot! \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 	3a. Key Generator\n 	3b. Encryptor \n 	3c. Decryptor \n 4. Hashing Practical Example \n 5. Diagrams of Cryptographic Primitives \n 6. Personal Encryption \n 7. Exit \n")
+    choice = input ("\nWelcome to the cryptographic primitive library, your one stop location for all your encryption and hashing needs! Please select from one of the options below to proceed: \n 1. Summary and explanation of cryptographic primitives \n 2. Symmetric Encryption Practical Example \n 	2a. Encryptor \n 	2b. Decryptor \n 3. Asymmetric Encryption Practical Example \n 	3a. Key Generator\n 	3b. Encryptor \n 	3c. Decryptor \n 4. Hashing Practical Example \n 5. Diagrams of Cryptographic Primitives \n 6. Personal Encryption \n 7. Exit \n")
     if choice == '1' :
-        print('chatbot')
+        CryptoReport ()
     elif choice == '2' :
         SymmetricEncryption ()
     elif choice == '2a' :
